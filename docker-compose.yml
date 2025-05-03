@@ -42,7 +42,7 @@ services:
       - SERVER_NAME=kibana
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=ddWPlJnM-4_CwU_UK_M=
+      - ELASTICSEARCH_PASSWORD=rjM-=xge2qrjAfEDIUrc
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=xpackencryptedsavedobject123456789012
       - ELASTICSEARCH_PUBLICBASEURL=http://localhost:9200
     healthcheck:
