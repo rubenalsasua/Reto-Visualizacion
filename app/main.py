@@ -38,19 +38,25 @@ def load_csv(file_path):
 # Usar variables de entorno para la conexión
 def connect_to_elasticsearch(url=None, max_retries=60, initial_retry_interval=1):
     url = url or os.environ.get('ELASTICSEARCH_URL', 'http://elasticsearch:9200')
-    user = os.environ.get('ELASTICSEARCH_USER', 'elastic')
-    password = os.environ.get('ELASTICSEARCH_PASSWORD', '')
-    
+    user = os.environ.get('ELASTICSEARCH_USER')
+    password = os.environ.get('ELASTICSEARCH_PASSWORD')
+
     logger.info(f"Intentando conectar a Elasticsearch en {url}")
-    
-    # Configuración específica para ES 8.x
-    es = Elasticsearch(
-        url,
-        basic_auth=(user, password),
-        verify_certs=False,
-        ssl_show_warn=False
-    )
-    
+
+    if user and password:
+        es = Elasticsearch(
+            url,
+            basic_auth=(user, password),
+            verify_certs=False,
+            ssl_show_warn=False
+        )
+    else:
+        es = Elasticsearch(
+            url,
+            verify_certs=False,
+            ssl_show_warn=False
+        )
+
     retry_interval = initial_retry_interval
     for attempt in range(max_retries):
         try:
@@ -61,13 +67,12 @@ def connect_to_elasticsearch(url=None, max_retries=60, initial_retry_interval=1)
             logger.warning(f"Esperando a Elasticsearch... Intento {attempt+1}/{max_retries}")
         except Exception as e:
             logger.error(f"Error al conectar: {str(e)}")
-        
+
         if attempt < max_retries - 1:
-            # Backoff exponencial con un máximo de 30 segundos
             retry_interval = min(retry_interval * 1.5, 30)
             logger.info(f"Esperando {retry_interval:.1f} segundos antes del próximo intento...")
             time.sleep(retry_interval)
-    
+
     logger.error("No se pudo conectar a Elasticsearch después de varios intentos")
     sys.exit(1)
 
