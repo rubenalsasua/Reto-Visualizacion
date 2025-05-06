@@ -40,6 +40,7 @@ services:
        - 127.0.0.1:${KIBANA_LOCAL_PORT}:5601
      environment:
        - SERVER_NAME=kibana
+       - xpack.security.enabled=false
        - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
        - ELASTICSEARCH_USERNAME=kibana_system
        - ELASTICSEARCH_PASSWORD=${KIBANA_LOCAL_PASSWORD}
@@ -54,7 +55,9 @@ services:
        interval: 10s
        timeout: 10s
        retries: 30
- 
+     depends_on:
+       elasticsearch:
+         condition: service_healthy
  
    app:
      build:
@@ -62,11 +65,15 @@ services:
      container_name: app
      volumes:
        - ./data:/data
+       - ./app:/app
      environment:
-       - ELASTICSEARCH_PASSWORD=${ES_LOCAL_PASSWORD}  # Añade esta línea
+       - ELASTICSEARCH_PASSWORD=${ES_LOCAL_PASSWORD}
      depends_on:
        elasticsearch:
          condition: service_healthy
+       kibana:
+         condition: service_healthy
+     command: ["/bin/bash", "/app/script/import_dashboards.sh"]
      mem_limit: 500m
      restart: on-failure
   
