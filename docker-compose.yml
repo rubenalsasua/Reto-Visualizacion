@@ -59,23 +59,6 @@ services:
        elasticsearch:
          condition: service_healthy
  
-   app:
-     build:
-       context: ./app
-     container_name: app
-     volumes:
-       - ./data:/data
-       - ./app:/app
-     environment:
-       - ELASTICSEARCH_PASSWORD=${ES_LOCAL_PASSWORD}
-     depends_on:
-       elasticsearch:
-         condition: service_healthy
-       kibana:
-         condition: service_healthy
-     command: ["/bin/bash", "/app/script/import_dashboards.sh"]
-     mem_limit: 500m
-     restart: on-failure
   
 volumes:
   dev-elasticsearch:
