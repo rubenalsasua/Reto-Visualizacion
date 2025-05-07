@@ -1,13 +1,11 @@
 # Reto-Visualizacion
 Miembros del equipo:
-
-Manel Díaz
-
-Ruben Alsasua
-
-Eneko Saez
+- Manel Díaz
+- Rubén Alsasua
+- Eneko Sáez
 
 Enlace a github: https://github.com/rubenalsasua/Reto-Visualizacion
+
 
 Pasos seguidos:
 
